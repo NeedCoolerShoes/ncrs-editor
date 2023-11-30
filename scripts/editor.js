@@ -24,7 +24,7 @@ function UseBucket(part, canvasTexture, pixel) {
 }
 
 const NCRSEditor = new CopperOre({
-  texture: './scripts/vendor/copper_ore/assets/mncs-mascot.png',
+  texture: '/mncs-mascot.png',
   bind: this,
   parent: document.getElementById("editor"),
   tools: {
