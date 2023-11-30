@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="stylesheets/main.css">
+    <title>NCRS UI</title>
+    <script type="text/javascript" src="scripts/vendor/color.all.min.js"></script> 
+    <script type="importmap">
+      {
+        "imports": {
+          "copperore/skin_mesh_creator": "./scripts/vendor/copper_ore/src/skin_mesh_creator.js",
+          "copperore/skin_renderer_standalone": "./scripts/vendor/copper_ore/src/skin_renderer_standalone.js",
+          "copperore/skin_grid": "./scripts/vendor/copper_ore/src/skin_grid.js",
+          "copperore/skin_layer": "./scripts/vendor/copper_ore/src/skin_layer.js",
+          "copperore/canvas_intermediate_texture": "./scripts/vendor/copper_ore/src/canvas_intermediate_texture.js",
+          "copperore/ui": "./scripts/vendor/copper_ore/src/ui.js",
+          "copperore/utils": "./scripts/vendor/copper_ore/src/utils.js"
+        }
+      }
+    </script>
+    <script type="module" src="scripts/main.js"></script>
+  </head>
+  <body class="flex flex-col items-center justify-center min-h-screen">
+    <div class="flex w-full max-w-ncs-content bg-ncs-gray-600 text-white">
+      <div id="toolbox" class="p-1 bg-ncs-gray-900">
+        <div id="toolbox-buttons" class="flex flex-col gap-1 text-2xl"></div>
+      </div>
+      <div id="editor" class="grow bg-gray-500 h-[600px]"></div>
+      <div class="flex flex-col bg-ncs-gray-900 p-1">
+        <div id="layers" class="grow"></div>
+        <div id="layer-buttons" class="flex"></div>
+      </div>
+      <div class="w-72 p-2">
+        <div id="color-picker" class="relative"></div>
+        <div id="menu">
+          <details id="tool-config" open>
+            <summary>Tool</summary>
+          </details>
+          <details>
+            <summary>Layer</summary>
+          </details>
+          <details>
+            <summary>Import</summary>
+          </details>
+          <details>
+            <summary>Export</summary>
+          </details>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

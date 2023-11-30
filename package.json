@@ -1,0 +1,23 @@
+{
+  "name": "ncrs-ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "@shopify/draggable": "^1.1.3",
+    "three": "^0.158.0",
+    "vanjs-core": "^1.2.6",
+    "vanjs-ext": "^0.1.3"
+  }
+}
