@@ -12,17 +12,19 @@ const state = vanX.reactive({
 
 let reorderedLayers = [];
 
-EventBus.on("editor-layer-remove", event => {
-  let index = GetLayerIndex(event.layerId);
-  state.layers.splice(index, 1);
-  SwitchLayer(ClampedIndex(state.currentLayer));
-})
-EventBus.on("editor-layer-reorder", event => {
-  reorderedLayers = event.layers;
-})
+// EventBus.on("editor-layer-remove", event => {
+//   let index = GetLayerIndex(event.layerId);
+//   state.layers.splice(index, 1);
+//   SwitchLayer(ClampedIndex(state.currentLayer));
+// })
+// EventBus.on("editor-layer-reorder", event => {
+//   reorderedLayers = event.layers;
+// })
 
-EventBus.on("editor-layer-update", event => {
+EventBus.on("editor-layer-add", event => {
   console.log(event)
+  layerList.addLayer(event.newLayer)
+  return
   if (event.parentEvent == "layer-reorder") { return; }
   if (event.parentEvent == "layer-remove") { return; }
   vanX.replace(state.layers, () => { return event.layers; });
@@ -148,30 +150,37 @@ addFromID(
   button(
     {
       class: "btn-ncs w-8 rounded-br-lg rounded-bl-none font-icon",
-      onclick: () => { EventBus.signal("ui-layer-remove", {layerIndex: ClampedIndex(state.currentLayer)}) }
+      onclick: () => {
+        // EventBus.signal("ui-layer-remove", {layerIndex: ClampedIndex(state.currentLayer)})
+        layerList.removeCurrentLayer()
+      }
     },
     "\ue828"
   )
 )
 
-addFromID(
-  "layers",
-  LayerList()
-)
+// addFromID(
+//   "layers",
+//   LayerList()
+// )
 
-const sortable = new Sortable(document.querySelectorAll('.sortable'), {
-  draggable: '.draggable',
-  distance: 2
-});
+const layerList = document.createElement('ncrs-layer-list')
+document.getElementById('layers').append(layerList)
 
-sortable.on("sortable:stop", event => {
-  if (state.currentLayer == event.data.oldIndex) {
-    state.currentLayer = event.data.newIndex;
-  }
-  let layerId = event.dragEvent.data.source.dataset.layerId
-  EventBus.signal("ui-layer-reorder", {layerId: layerId, layerIndex: event.data.newIndex})
-})
 
-sortable.on("drag:stopped", event => {
-  vanX.replace(state.layers, () => { return reorderedLayers; })
-})
+// const sortable = new Sortable(document.querySelectorAll('.sortable'), {
+//   draggable: '.draggable',
+//   distance: 2
+// });
+
+// sortable.on("sortable:stop", event => {
+//   if (state.currentLayer == event.data.oldIndex) {
+//     state.currentLayer = event.data.newIndex;
+//   }
+//   let layerId = event.dragEvent.data.source.dataset.layerId
+//   EventBus.signal("ui-layer-reorder", {layerId: layerId, layerIndex: event.data.newIndex})
+// })
+
+// sortable.on("drag:stopped", event => {
+//   vanX.replace(state.layers, () => { return reorderedLayers; })
+// })

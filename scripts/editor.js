@@ -1,5 +1,6 @@
 import {EventBus} from "./events.js"
 import {CopperOre} from "./vendor/copper_ore/src/copper_ore.js"
+import {NCRSLayer} from "./ui/layers.js"
 
 var currentColor = {r: 1, b: 0, g: 0, a: 1}
 
@@ -41,6 +42,11 @@ NCRSEditor.settings.grid = true;
 NCRSEditor.on("layer-update", event => {
   console.log("layer updating")
   EventBus.signal("editor-layer-update", event);
+})
+
+NCRSEditor.on("layer-add", event => {
+  console.log("layer updating")
+  EventBus.signal("editor-layer-add", event);
 })
 
 NCRSEditor.on("layer-reorder", event => {
