@@ -26,14 +26,16 @@
       <div id="toolbox" class="p-1 bg-ncs-gray-900">
         <div id="toolbox-buttons" class="flex flex-col gap-1 text-2xl"></div>
       </div>
-      <div id="editor" class="grow bg-gray-500 h-[600px]"></div>
+      <div id="editor" class="grow bg-gray-500 h-[600px] cursor-crosshair"></div>
       <div class="flex flex-col bg-ncs-gray-900 p-1">
-        <div id="layers" class="grow"></div>
+        <div class="relative grow max-h-[552px]">
+          <div id="layers" class="absolute flex top-0 bottom-0 left-0 right-0"></div>
+        </div>
         <div id="layer-buttons" class="flex"></div>
       </div>
-      <div class="w-72 p-2">
-        <div id="color-picker" class="relative"></div>
-        <div id="menu">
+      <div class="w-72">
+        <div id="color-picker" class="relative bg-[#1A1A1A]"></div>
+        <div id="menu" class="p-2">
           <details id="tool-config" open>
             <summary>Tool</summary>
           </details>

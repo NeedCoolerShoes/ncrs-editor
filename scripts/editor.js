@@ -39,22 +39,20 @@ const NCRSEditor = new CopperOre({
 NCRSEditor.camera.zoom = 1.6;
 NCRSEditor.settings.grid = true;
 
-NCRSEditor.on("layer-update", event => {
-  console.log("layer updating")
-  EventBus.signal("editor-layer-update", event);
+NCRSEditor.addEventListener('layer-update', event => {
+  EventBus.signal("editor-layer-update", event.detail);
 })
 
-NCRSEditor.on("layer-add", event => {
-  console.log("layer updating")
-  EventBus.signal("editor-layer-add", event);
+NCRSEditor.addEventListener('layer-add', event => {
+  EventBus.signal("editor-layer-add", event.detail);
 })
 
-NCRSEditor.on("layer-reorder", event => {
-  EventBus.signal("editor-layer-reorder", event);
+NCRSEditor.addEventListener('layer-reorder', event => {
+  EventBus.signal("editor-layer-reorder", event.detail);
 })
 
-NCRSEditor.on("layer-remove", event => {
-  EventBus.signal("editor-layer-remove", event);
+NCRSEditor.addEventListener('layer-remove', event => {
+  EventBus.signal("editor-layer-remove", event.detail);
 })
 
 EventBus.on("color-set", event => { currentColor = event; })
