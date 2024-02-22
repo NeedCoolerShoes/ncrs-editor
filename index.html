@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="stylesheets/main.css">
     <title>NCRS UI</title>
-    <script type="text/javascript" src="color.all.min.js"></script> 
+    <link rel="stylesheet" href="coloris.min.css"/>
+    <link rel="stylesheet" href="color-picker.css"/>
+    <script src="coloris.min.js"></script>
     <script type="importmap">
       {
         "imports": {
@@ -33,22 +35,32 @@
         </div>
         <div id="layer-buttons" class="flex"></div>
       </div>
-      <div class="w-72">
-        <div id="color-picker" class="relative bg-[#1A1A1A]"></div>
-        <div id="menu" class="p-2">
-          <details id="tool-config" open>
-            <summary>Tool</summary>
-          </details>
-          <details>
-            <summary>Layer</summary>
-          </details>
-          <details>
-            <summary>Import</summary>
-          </details>
-          <details>
-            <summary>Export</summary>
-          </details>
-        </div>
+      <div class="w-72 flex flex-col">
+        <ncrs-tab-panel id="tool-tab" class="flex flex-col grow">
+          <div id="color-picker" class="relative bg-[#1A1A1A] flex items-center justify-center pt-2"></div>
+          <div class="p-2 bg-[#1A1A1A]">
+            <p class="mb-4">Recent Colours</p>
+            <p class="mb-4">Blend Palette</p>
+          </div>
+          <div id="menu" class="p-2">
+            <p>Tool Config</p>
+            <div id="tool-config">
+            </div>
+          </div>
+        </ncrs-tab-panel>
+        <ncrs-tab-panel id="layers-tab" class="flex flex-col grow p-2">Layer Config</ncrs-tab-panel>
+        <ncrs-tab-panel id="import-tab" class="flex flex-col grow p-2">
+          Import Skins
+        </ncrs-tab-panel>
+        <ncrs-tab-panel id="export-tab" class="flex flex-col grow p-2">
+          Export Skin
+        </ncrs-tab-panel>
+        <ncrs-tab-list class="flex p-1 gap-1 bg-ncs-gray-900">
+          <ncrs-tab data-selected="true" data-panel="#tool-tab" class="font-bold">Tool</ncrs-tab>
+          <ncrs-tab data-panel="#layers-tab" class="font-bold">Layers</ncrs-tab>
+          <ncrs-tab data-panel="#import-tab" class="font-bold">Import</ncrs-tab>
+          <ncrs-tab data-panel="#export-tab" class="font-bold">Export</ncrs-tab>
+        </ncrs-tab-list>
       </div>
     </div>
   </body>

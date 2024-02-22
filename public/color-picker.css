@@ -1,0 +1,22 @@
+.clr-dark {
+  background-color: #1A1A1A;
+}
+
+.clr-gradient {
+  border-radius: 3px 3px 3px 3px;
+}
+
+#clr-color-value {
+  border-radius: 4px;
+  background-color: #131315;
+  border-color: #313436;
+
+}
+
+#clr-color-value:focus {
+  border-color: #2563eb;
+}
+
+.clr-picker {
+  box-shadow: none;
+}
