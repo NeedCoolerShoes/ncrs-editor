@@ -56,13 +56,13 @@ class NCRSLayer extends HTMLElement {
     this.dispatchEvent(this.selectEvent);
     this.classList.remove('border-ncs-gray-700');
     this.classList.add('border-gray-600');
-    this.setAttribute('data-selected', 'true');
+    this.setAttribute('selected', true);
   }
 
   deselect() {
     this.classList.remove('border-gray-600');
     this.classList.add('border-ncs-gray-700');
-    this.setAttribute('data-selected', '');
+    this.setAttribute('selected', '');
   }
 
   connectedCallback() {
@@ -70,7 +70,7 @@ class NCRSLayer extends HTMLElement {
     this.addEventListener('click', event => { event.target.select() })
     if (this.skinLayer) {
       this.setAttribute('id', `layer-${this.skinLayer.id}`)
-      this.setAttribute('data-id', this.skinLayer.id)
+      this.setAttribute('layer-id', this.skinLayer.id)
       this.skinLayer.addEventListener('layer-preview', event => {
         const img = new Image;
         img.src = event.detail.url;
@@ -80,7 +80,7 @@ class NCRSLayer extends HTMLElement {
         }
       })
     }
-    if (this.dataset.selected) {
+    if (this.hasAttribute("selected")) {
       this.select();
     }
   }

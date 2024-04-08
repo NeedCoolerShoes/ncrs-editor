@@ -8,25 +8,16 @@
     <link rel="stylesheet" href="coloris.min.css"/>
     <link rel="stylesheet" href="color-picker.css"/>
     <script src="coloris.min.js"></script>
-    <script type="importmap">
-      {
-        "imports": {
-          "copperore/skin_mesh_creator": "./scripts/vendor/copper_ore/src/skin_mesh_creator.js",
-          "copperore/skin_renderer_standalone": "./scripts/vendor/copper_ore/src/skin_renderer_standalone.js",
-          "copperore/skin_grid": "./scripts/vendor/copper_ore/src/skin_grid.js",
-          "copperore/skin_layer": "./scripts/vendor/copper_ore/src/skin_layer.js",
-          "copperore/canvas_intermediate_texture": "./scripts/vendor/copper_ore/src/canvas_intermediate_texture.js",
-          "copperore/ui": "./scripts/vendor/copper_ore/src/ui.js",
-          "copperore/utils": "./scripts/vendor/copper_ore/src/utils.js"
-        }
-      }
-    </script>
     <script type="module" src="scripts/main.js"></script>
   </head>
   <body class="flex flex-col items-center justify-center min-h-screen">
     <div class="flex w-full max-w-ncs-content bg-ncs-gray-600 text-white">
       <div id="toolbox" class="p-1 bg-ncs-gray-900">
-        <div id="toolbox-buttons" class="flex flex-col gap-1 text-2xl"></div>
+        <ncrs-tool-list id="toolbox-buttons" class="flex flex-col gap-1 text-2xl">
+          <ncrs-tool title="Switch to brush." class="btn-ncs font-icon select-none w-12" selected="true" tool="brush" config="#brush-config"></ncrs-tool>
+          <ncrs-tool title="Switch to square." class="btn-ncs font-icon select-none w-12" tool="square" config="#square-config"></ncrs-tool>
+          <ncrs-tool title="Switch to bucket." class="btn-ncs font-icon select-none w-12" tool="bucket" config="#bucket-config"></ncrs-tool>
+        </ncrs-tool-list>
       </div>
       <div id="editor" class="grow bg-gray-500 h-[600px] cursor-crosshair"></div>
       <div class="flex flex-col bg-ncs-gray-900 p-1">
@@ -37,29 +28,39 @@
       </div>
       <div class="w-72 flex flex-col">
         <ncrs-tab-panel id="tool-tab" class="flex flex-col grow">
-          <div id="color-picker" class="relative bg-[#1A1A1A] flex items-center justify-center pt-2"></div>
-          <div class="p-2 bg-[#1A1A1A]">
-            <p class="mb-4">Recent Colours</p>
-            <p class="mb-4">Blend Palette</p>
+          <div class="bg-[#1A1A1A] h-[288px] flex items-center justify-center">
+            <div id="color-picker" class="relative"></div>
           </div>
-          <div id="menu" class="p-2">
-            <p>Tool Config</p>
-            <div id="tool-config">
-            </div>
+          <div class="p-2 pt-0 bg-[#1A1A1A]">
+            <p class="text-xs text-gray-400">Recent Colors</p>
+            <ncrs-recent-palette class="flex flex-wrap gap-0.5 p-1 mb-2 justify-center bg-ncs-gray-900"></ncrs-recent-palette>
+            <p class="text-xs text-gray-400">Blend Palette</p>
+            <ncrs-blend-palette class="flex flex-wrap gap-0.5 p-1 max-h-[50px] overflow-auto justify-center bg-ncs-gray-900"></ncrs-blend-palette>
+          </div>
+          <div id="menu" class="px-2 pt-2">
+            <ncrs-tool-config id="brush-config" class="hidden flex-col">
+              <h2 class="self-center text-sm text-gray-400">Brush Tool</h2>
+            </ncrs-tool-config>
+            <ncrs-tool-config id="square-config" class="hidden flex-col">
+              <h2 class="self-center text-sm text-gray-400">Square Tool</h2>
+            </ncrs-tool-config>
+            <ncrs-tool-config id="bucket-config" class="hidden flex-col">
+              <h2 class="self-center text-sm text-gray-400">Fill Tool</h2>
+            </ncrs-tool-config>
           </div>
         </ncrs-tab-panel>
-        <ncrs-tab-panel id="layers-tab" class="flex flex-col grow p-2">Layer Config</ncrs-tab-panel>
-        <ncrs-tab-panel id="import-tab" class="flex flex-col grow p-2">
+        <ncrs-tab-panel id="layers-tab" class="hidden flex-col grow p-2">Layer Config</ncrs-tab-panel>
+        <ncrs-tab-panel id="import-tab" class="hidden flex-col grow p-2">
           Import Skins
         </ncrs-tab-panel>
-        <ncrs-tab-panel id="export-tab" class="flex flex-col grow p-2">
+        <ncrs-tab-panel id="export-tab" class="hidden flex-col grow p-2">
           Export Skin
         </ncrs-tab-panel>
-        <ncrs-tab-list class="flex p-1 gap-1 bg-ncs-gray-900">
-          <ncrs-tab data-selected="true" data-panel="#tool-tab" class="font-bold">Tool</ncrs-tab>
-          <ncrs-tab data-panel="#layers-tab" class="font-bold">Layers</ncrs-tab>
-          <ncrs-tab data-panel="#import-tab" class="font-bold">Import</ncrs-tab>
-          <ncrs-tab data-panel="#export-tab" class="font-bold">Export</ncrs-tab>
+        <ncrs-tab-list class="flex gap-1 bg-ncs-gray-900 text-center pb-1">
+          <ncrs-tab selected="true" panel="#tool-tab" class="tab-t-ncs">Tool</ncrs-tab>
+          <ncrs-tab panel="#layers-tab" class="tab-t-ncs">Layers</ncrs-tab>
+          <ncrs-tab panel="#import-tab" class="tab-t-ncs">Import</ncrs-tab>
+          <ncrs-tab panel="#export-tab" class="tab-t-ncs">Export</ncrs-tab>
         </ncrs-tab-list>
       </div>
     </div>

@@ -25,10 +25,12 @@ class NCRSTab extends HTMLElement {
     super();
   }
 
+  selectedClasses = ['bg-ncs-gray-600', 'tab-ncs-active']
+  deselectedClasses = ['bg-ncs-gray-800']
   tabPanel;
 
   connectedCallback() {
-    if (this.dataset.selected) {
+    if (this.hasAttribute("selected")) {
       window.addEventListener('load', () => {
         this.select();
       })
@@ -37,13 +39,13 @@ class NCRSTab extends HTMLElement {
         this.deselect();
       })
     }
-    if (this.dataset.panel) {
-      const panel = document.querySelector(this.dataset.panel);
+    if (this.hasAttribute("panel")) {
+      const panel = document.querySelector(this.getAttribute("panel"));
       if (panel instanceof NCRSTabPanel) {
         this.tabPanel = panel; 
       }
     }
-    this.classList.add('btn-ncs', 'btn-ncs-text', 'select-none')
+    this.classList.add('select-none')
     this.addEventListener('click', event => {
       if (event.target.parentElement instanceof NCRSTabList) {
         event.target.parentElement.deselectAll();
@@ -53,23 +55,25 @@ class NCRSTab extends HTMLElement {
   }
 
   select() {
-    this.setAttribute('data-selected', true)
-    this.classList.add('btn-ncs-active')
+    this.setAttribute('selected', true)
+    this.classList.add(...this.selectedClasses)
+    this.classList.remove(...this.deselectedClasses)
     if (this.tabPanel) {
       this.tabPanel.show();
     }
   }
 
   deselect() {
-    this.setAttribute('data-selected', '')
-    this.classList.remove('btn-ncs-active')
+    this.setAttribute('selected', '')
+    this.classList.add(...this.deselectedClasses)
+    this.classList.remove(...this.selectedClasses)
     if (this.tabPanel) {
       this.tabPanel.hide();
     }
   }
 
   isSelected() {
-    return !!(this.dataset.selected)
+    return !!(this.getAttribute("selected"))
   }
 }
 

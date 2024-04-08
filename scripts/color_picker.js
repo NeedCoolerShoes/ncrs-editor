@@ -1,4 +1,5 @@
-import { EventBus } from "./events";
+import {NCRSEditor, NCRSEditorSettings} from "./editor";
+import {hexToRGB} from "./helpers";
 
 window.addEventListener('load', () => {
   Coloris({
@@ -22,7 +23,9 @@ window.addEventListener('load', () => {
 
   colorValue.addEventListener('input', event => {
     const value = event.target.value
-    if (!value.startsWith('#')) {
+    if (value.match(/#moxvallix/i)) {
+      NCRSEditor.camera.up.set(0, -NCRSEditor.camera.up.y, 0)
+    } else if (!value.startsWith('#')) {
       event.target.value = '#' + value
     }
   })
@@ -40,23 +43,13 @@ window.addEventListener('load', () => {
 })
 
 function onColorChange(color) {
-  console.log(hexToRGB(color));
-  EventBus.signal("color-set", hexToRGB(color));
+  NCRSEditorSettings.currentColor = hexToRGB(color, 1);
 }
 
-// https://stackoverflow.com/questions/21646738/convert-hex-to-rgba#28056903
-function hexToRGB(hex) {
-  let r = parseInt(hex.slice(1, 3), 16),
-      g = parseInt(hex.slice(3, 5), 16),
-      b = parseInt(hex.slice(5, 7), 16);
-  
-  let a = 255;
-
-  if (hex.length > 7) {
-    a = parseInt(hex.slice(7, 9), 16);
-  }
-
-  return {r: r / 255, g: g / 255, b: b / 255, a: a / 255 }
+function changeColor(color) {
+  const colorValue = document.getElementById('clr-color-value');
+  colorValue.value = color;
+  colorValue.dispatchEvent(new Event('change'));
 }
 
 const resizeHandler = new ResizeObserver( () => {
@@ -64,3 +57,5 @@ const resizeHandler = new ResizeObserver( () => {
 })
 
 resizeHandler.observe(document.body);
+
+export {changeColor};
