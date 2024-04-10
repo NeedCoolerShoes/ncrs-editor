@@ -7,6 +7,7 @@
     <title>NCRS UI</title>
     <link rel="stylesheet" href="coloris.min.css"/>
     <link rel="stylesheet" href="color-picker.css"/>
+    <link rel="icon" href="favicon.ico">
     <script src="coloris.min.js"></script>
     <script type="module" src="scripts/main.js"></script>
   </head>
@@ -17,6 +18,7 @@
           <ncrs-tool title="Switch to brush." class="btn-ncs font-icon select-none w-12" selected="true" tool="brush" config="#brush-config"></ncrs-tool>
           <ncrs-tool title="Switch to square." class="btn-ncs font-icon select-none w-12" tool="square" config="#square-config"></ncrs-tool>
           <ncrs-tool title="Switch to bucket." class="btn-ncs font-icon select-none w-12" tool="bucket" config="#bucket-config"></ncrs-tool>
+          <ncrs-tool title="Switch to shade tool." class="btn-ncs font-icon select-none w-12" tool="shade" config="#shade-config"></ncrs-tool>
         </ncrs-tool-list>
       </div>
       <div id="editor" class="grow bg-gray-500 h-[600px] cursor-crosshair"></div>
@@ -46,6 +48,9 @@
             </ncrs-tool-config>
             <ncrs-tool-config id="bucket-config" class="hidden flex-col">
               <h2 class="self-center text-sm text-gray-400">Fill Tool</h2>
+            </ncrs-tool-config>
+            <ncrs-tool-config id="shade-config" class="hidden flex-col">
+              <h2 class="self-center text-sm text-gray-400">Shade Tool</h2>
             </ncrs-tool-config>
           </div>
         </ncrs-tab-panel>
