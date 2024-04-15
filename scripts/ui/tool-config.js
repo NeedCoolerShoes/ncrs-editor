@@ -1,5 +1,4 @@
-import { call } from "three/examples/jsm/nodes/Nodes.js"
-import {NCRSEditorSettings} from "../editor.js"
+import {NCRSEditorSettings, NCRSEditor} from "../editor.js"
 
 function configToggle(title, name, data, callback) {
   const configField = document.createElement('fieldset')
@@ -10,37 +9,43 @@ function configToggle(title, name, data, callback) {
   configTitle.classList.add('text-xs', 'text-gray-400')
   configField.append(configTitle)
 
+  let count = 0
+
   data.forEach(value => {
+    count += 1
     const radio = document.createElement('input')
+    const radioLabel = document.createElement('label')
     radio.type = 'radio'
-    radio.innerText = value[0]
+    radio.id = `${name}-${count}}`
+    radio.classList.add('hidden', 'btn-ncs')
     radio.setAttribute('name', name)
-    if (value == data.at(0)) {
+    radioLabel.htmlFor = radio.id
+    radioLabel.textContent = value[0]
+    if (value == data[0]) {
       radio.checked = true
-      radio.classList.add('rounded-bl-lg')
+      radioLabel.classList.add('rounded-bl-lg')
     }
-    if (value == data.at(-1)) {
-      radio.classList.add('rounded-br-lg')
+    if (value == data[data.length - 1]) {
+      radioLabel.classList.add('rounded-br-lg')
     }
-    radio.classList.add('btn-ncs', 'font-icon', 'appearance-none', 'select-none')
+    radioLabel.classList.add('btn-ncs', 'font-icon', 'select-none')
 
-    callback(value, radio)
-
+    callback(value, radio, radioLabel)
     configField.append(radio)
+    configField.append(radioLabel)
   });
 
   return configField;
 }
 
 function sizeInput(name, sizes) {
-  const sizeInput = configToggle("Size", name, sizes, (value, radio) => {
+  const sizeInput = configToggle("Size", name, sizes, (value, radio, radioLabel) => {
     radio.setAttribute('title', `Set brush size of ${value[1]}.`)
     radio.setAttribute('data-size', value[1])
     radio.addEventListener('click', event => {
       NCRSEditorSettings.setBrushSize(Number(event.target.dataset.size))
     })
     NCRSEditorSettings.addEventListener("brushSize", event => {
-      console.log(event)
       if (value[1] == event.detail.size) {
         radio.checked = true
       } else {
@@ -63,10 +68,17 @@ function effectField(title = "Effects") {
 }
 
 function effectToggle(effect, icon, title = "") {
-  const effectToggle = document.createElement('button')
-  effectToggle.classList.add('btn-ncs', 'rounded-full', 'font-icon', 'py-2', 'w-6', 'text-center', 'text-sm')
-  effectToggle.innerText = icon
-  effectToggle.title = title
+  const effectID = "effect-" + effect
+  const effectToggle = document.createElement('input')
+  const effectLabel = document.createElement('label')
+  const effectDiv = document.createElement('div')
+  effectToggle.type = "checkbox"
+  effectToggle.id = effectID
+  effectLabel.htmlFor = effectID
+  effectToggle.classList.add('hidden', 'btn-ncs')
+  effectLabel.classList.add('btn-ncs', 'rounded-full', 'font-icon', 'py-2', 'w-6', 'text-center', 'text-sm', 'select-none')
+  effectLabel.innerText = icon
+  effectLabel.title = title
 
   effectToggle.addEventListener('click', () => {
     NCRSEditorSettings.toggleEffect(effect);
@@ -81,7 +93,24 @@ function effectToggle(effect, icon, title = "") {
     }
   })
 
-  return effectToggle
+  effectDiv.append(effectToggle)
+  effectDiv.append(effectLabel)
+
+  return effectDiv
+}
+
+function previewConfig() {
+  const tool = document.getElementById('preview-tool');
+  tool.addEventListener('select', () => {
+    NCRSEditor.disableTools = true
+    NCRSEditor.parent.classList.add('cursor-move')
+    NCRSEditor.parent.classList.remove('cursor-crosshair')
+  })
+  tool.addEventListener('deselect', () => {
+    NCRSEditor.disableTools = false
+    NCRSEditor.parent.classList.remove('cursor-move')
+    NCRSEditor.parent.classList.add('cursor-crosshair')
+  })
 }
 
 function brushConfig() {
@@ -136,7 +165,7 @@ function shadeConfig() {
 
   subPanel.append(sizeInput("shade-size", brushSizes))
   subPanel.append(
-    configToggle("Shade Steps", "shade-steps", stepSizes, (value, radio) => {
+    configToggle("Shade Steps", "shade-steps", stepSizes, (value, radio, radioLabel) => {
       radio.setAttribute('title', `Set shade steps to ${value[1]}.`)
       radio.setAttribute('data-step', value[1])
       radio.addEventListener('click', event => {
@@ -149,6 +178,7 @@ function shadeConfig() {
 }
 
 window.addEventListener('load', () => {
+  previewConfig();
   brushConfig();
   bucketConfig();
   shadeConfig();

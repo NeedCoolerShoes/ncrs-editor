@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./**/*.{html,js}"
+    "./public/**/*.{html,js}",
+    "./scripts/**/*.{html,js}",
+    "./*.{html,js}",
   ],
   theme: {
     extend: {
@@ -34,6 +36,9 @@ export default {
       maxWidth: {
         'ncs-content': "998px"
       },
+      screens: {
+        touch: {raw: "(any-pointer: coarse)"}
+      }
     },
   },
   plugins: [],

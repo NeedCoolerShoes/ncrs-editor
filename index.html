@@ -13,15 +13,17 @@
   </head>
   <body class="flex flex-col items-center justify-center min-h-screen">
     <div class="flex w-full max-w-ncs-content bg-ncs-gray-600 text-white">
-      <div id="toolbox" class="p-1 bg-ncs-gray-900">
+      <div id="toolbox" class="relative p-1 bg-ncs-gray-900">
         <ncrs-tool-list id="toolbox-buttons" class="flex flex-col gap-1 text-2xl">
+          <ncrs-tool id="preview-tool" title="Switch to preview mode." class="hidden touch:block btn-ncs font-icon select-none w-12" tool="preview" config="#preview-config"></ncrs-tool>
           <ncrs-tool title="Switch to brush." class="btn-ncs font-icon select-none w-12" selected="true" tool="brush" config="#brush-config"></ncrs-tool>
           <ncrs-tool title="Switch to square." class="btn-ncs font-icon select-none w-12" tool="square" config="#square-config"></ncrs-tool>
           <ncrs-tool title="Switch to bucket." class="btn-ncs font-icon select-none w-12" tool="bucket" config="#bucket-config"></ncrs-tool>
           <ncrs-tool title="Switch to shade tool." class="btn-ncs font-icon select-none w-12" tool="shade" config="#shade-config"></ncrs-tool>
         </ncrs-tool-list>
+        <div id="toggles" class="absolute bottom-4 left-2 flex flex-col gap-1"></div>
       </div>
-      <div id="editor" class="grow bg-gray-500 h-[600px] cursor-crosshair"></div>
+      <div id="editor" class="relative grow bg-gray-500 h-[600px] cursor-crosshair select-none"></div>
       <div class="flex flex-col bg-ncs-gray-900 p-1">
         <div class="relative grow max-h-[552px]">
           <div id="layers" class="absolute flex top-0 bottom-0 left-0 right-0"></div>
@@ -40,6 +42,9 @@
             <ncrs-blend-palette class="flex flex-wrap gap-0.5 p-1 max-h-[50px] overflow-auto justify-center bg-ncs-gray-900"></ncrs-blend-palette>
           </div>
           <div id="menu" class="px-2 pt-2">
+            <ncrs-tool-config id="preview-config" class="hidden flex-col">
+              <h2 class="self-center text-sm text-gray-400">Preview Mode</h2>
+            </ncrs-tool-config>
             <ncrs-tool-config id="brush-config" class="hidden flex-col">
               <h2 class="self-center text-sm text-gray-400">Brush Tool</h2>
             </ncrs-tool-config>

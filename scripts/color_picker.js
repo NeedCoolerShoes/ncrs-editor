@@ -56,6 +56,9 @@ const resizeHandler = new ResizeObserver( () => {
   Coloris.updatePosition();
 })
 
-resizeHandler.observe(document.body);
+window.addEventListener("load", () => {
+  Coloris.updatePosition();
+  resizeHandler.observe(document.body);
+})
 
 export {changeColor};

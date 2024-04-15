@@ -2,10 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 16px;
+}
+
 @layer components {
   .btn-ncs {
     @apply cursor-pointer text-white text-center mb-1.5 p-1 block
-    font-serif font-extrabold
+    font-serif
     border border-ncs-gray-600 border-b-ncs-gray-700 rounded
     bg-gradient-to-t from-ncs-gray-400 to-ncs-gray-200;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px #262a2e,
@@ -21,7 +25,7 @@
     @apply text-ncs-yellow-200;
   }
 
-  .btn-ncs:active, .btn-ncs:checked, .btn-ncs-active {
+  .btn-ncs:active, .btn-ncs:checked, .btn-ncs:checked + .btn-ncs, .btn-ncs-active {
     @apply text-ncs-light-gray-200
     bg-gradient-to-b bg-ncs-gray-300
     mb-1 mt-0.5;
@@ -39,6 +43,7 @@
   .btn-ncs:disabled:active, .btn-ncs-disabled:active {
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px #262a2e,
     0 3px #1f2326, 0 4px 3px rgba(0, 0, 0, 0.2);
+    @apply mb-1.5 mt-0;
   }
 
   .tab-ncs {
@@ -71,4 +76,8 @@
       format("svg");
   font-weight: normal;
   font-style: normal;
+}
+
+ncrs-layer-list:focus {
+  outline: none;
 }

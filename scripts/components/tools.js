@@ -72,6 +72,7 @@ class NCRSTool extends HTMLElement {
   select() {
     this.setAttribute('selected', true)
     this.classList.add('btn-ncs-active')
+    this.dispatchEvent(new CustomEvent('select'))
     if (this.toolConfig) {
       this.toolConfig.show();
     }
@@ -86,6 +87,7 @@ class NCRSTool extends HTMLElement {
     if (this.toolConfig) {
       this.toolConfig.hide();
     }
+    this.dispatchEvent(new CustomEvent('deselect'))
   }
 
   isSelected() {

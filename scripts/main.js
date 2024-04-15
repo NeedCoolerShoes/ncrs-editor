@@ -1,8 +1,7 @@
-import './ui/layers.js'
-import './ui/palettes.js'
-import './ui/tabs.js'
-import './ui/tool-config.js'
-import './ui/tools.js'
+import './components/layers.js'
+import './components/palettes.js'
+import './components/tabs.js'
+import './components/tools.js'
 
 import "./color_picker.js"
 import "./editor.js"

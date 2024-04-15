@@ -1,4 +1,4 @@
-import {hexToRGB, RGBToHex} from "../helpers";
+import {RGBToHex} from "../helpers.js";
 import {NCRSEditor, NCRSEditorSettings} from "../editor.js";
 import {changeColor} from "../color_picker.js";
 

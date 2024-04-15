@@ -1,92 +1,38 @@
-class NCRSLayerList extends HTMLElement {
-  constructor() {
-    super();
-  }
+import {NCRSEditor} from "../editor.js";
+import {Sortable} from '@shopify/draggable';
 
-  layers = [];
-  selectedLayer;
+NCRSEditor.addEventListener('layer-add', event => {
+  layerList.addLayer(event.detail.newLayer)
+})
 
-  connectedCallback() {
-    this.setAttribute('class', 'flex flex-col-reverse grow justify-start gap-1 min-h-min overflow-auto sortable')
-    this.style.setProperty('scrollbar-width', 'none')
-  }
+const layerList = document.createElement('ncrs-layer-list')
+document.getElementById('layers').append(layerList)
 
-  addLayer(skinLayer) {
-    const layer = document.createElement('ncrs-layer');
-    layer.skinLayer = skinLayer;
-    this.layers.push(layer);    
+const layerButtons = document.getElementById('layer-buttons')
 
-    layer.addEventListener('ncrs-select', event => {
-      this.layers.forEach(layer => {
-        layer.deselect();
-      })
-      this.selectedLayer = event.target;
-    })
+const addLayerButton = document.createElement('button')
+addLayerButton.innerText = "\ue802"
+addLayerButton.classList.add("btn-ncs", "w-8", "rounded-bl-lg", "rounded-br-none", "font-icon")
+addLayerButton.addEventListener("click", () => {
+  NCRSEditor.AddBlankLayer();
+})
 
-    this.appendChild(layer);
-    layer.select();
-  }
+const removeLayerButton = document.createElement('button')
+removeLayerButton.innerText = "\ue828"
+removeLayerButton.classList.add("btn-ncs", "w-8", "rounded-bl-none", "rounded-br-lg", "font-icon")
+removeLayerButton.addEventListener("click", () => {
+  layerList.removeCurrentLayer()
+})
 
-  removeCurrentLayer() {
-    if (!this.selectedLayer) { return; };
-    const newSelected = this.selectedLayer.previousElementSibling || this.selectedLayer.nextElementSibling;
-    this.selectedLayer.removeLayer()
-    this.selectedLayer = newSelected;
-    if (this.selectedLayer) {
-      this.selectedLayer.select();
-    }
-  }
-}
+layerButtons.append(addLayerButton)
+layerButtons.append(removeLayerButton)
 
-class NCRSLayer extends HTMLElement {
-  constructor () {
-    super();
-  }
+const sortable = new Sortable(document.querySelectorAll('.sortable'), {
+  draggable: '.draggable',
+  distance: 2
+});
 
-  skinLayer;
-  selectEvent = new Event('ncrs-select')
-
-  removeLayer() {
-    this.skinLayer.remove();
-    this.remove();
-  }
-
-  select() {
-    if (this.skinLayer) { this.skinLayer.select() }
-    this.dispatchEvent(this.selectEvent);
-    this.classList.remove('border-ncs-gray-700');
-    this.classList.add('border-gray-600');
-    this.setAttribute('selected', true);
-  }
-
-  deselect() {
-    this.classList.remove('border-gray-600');
-    this.classList.add('border-ncs-gray-700');
-    this.setAttribute('selected', '');
-  }
-
-  connectedCallback() {
-    this.setAttribute('class', 'h-12 w-16 shrink-0 border-2 border-ncs-gray-700 border-dashed bg-no-repeat bg-center bg-contain draggable');
-    this.addEventListener('click', event => { event.target.select() })
-    if (this.skinLayer) {
-      this.setAttribute('id', `layer-${this.skinLayer.id}`)
-      this.setAttribute('layer-id', this.skinLayer.id)
-      this.skinLayer.addEventListener('layer-preview', event => {
-        const img = new Image;
-        img.src = event.detail.url;
-        img.onload = () => {
-          this.style.backgroundImage = `url(${event.detail.url})`
-          img.remove()
-        }
-      })
-    }
-    if (this.hasAttribute("selected")) {
-      this.select();
-    }
-  }
-}
-
-window.customElements.define("ncrs-layer-list", NCRSLayerList);
-window.customElements.define("ncrs-layer", NCRSLayer);
-
-export {NCRSLayer}
+sortable.on("sortable:stop", event => {
+  let layerId = event.dragEvent.data.source.getAttribute('layer-id')
+  NCRSEditor.ReorderLayer(layerId, event.data.newIndex)
+})
