@@ -28,7 +28,7 @@ function configToggle(title, name, data, callback) {
     if (value == data[data.length - 1]) {
       radioLabel.classList.add('rounded-br-lg')
     }
-    radioLabel.classList.add('btn-ncs', 'font-icon', 'select-none')
+    radioLabel.classList.add('btn-ncs', 'btn-ncs-label', 'font-icon', 'select-none')
 
     callback(value, radio, radioLabel)
     configField.append(radio)
@@ -76,7 +76,10 @@ function effectToggle(effect, icon, title = "") {
   effectToggle.id = effectID
   effectLabel.htmlFor = effectID
   effectToggle.classList.add('hidden', 'btn-ncs')
-  effectLabel.classList.add('btn-ncs', 'rounded-full', 'font-icon', 'py-2', 'w-6', 'text-center', 'text-sm', 'select-none')
+  effectLabel.classList.add(
+    'btn-ncs', 'btn-ncs-label', 'rounded-full', 'font-icon',
+    'py-2', 'w-6', 'text-center', 'text-sm', 'select-none'
+  )
   effectLabel.innerText = icon
   effectLabel.title = title
 
@@ -86,11 +89,7 @@ function effectToggle(effect, icon, title = "") {
 
   NCRSEditorSettings.addEventListener("effect", event => {
     if (event.detail.effect != effect) { return }
-    if (event.detail.value) {
-      effectToggle.classList.add('btn-ncs-active')
-    } else {
-      effectToggle.classList.remove('btn-ncs-active')
-    }
+    effectToggle.checked = event.detail.value
   })
 
   effectDiv.append(effectToggle)
@@ -128,7 +127,7 @@ function brushConfig() {
   effects.append(effectToggle("camo", "\ue821", "Toggle camo mode"))
   effects.append(effectToggle("blend", "\ue810", "Pick colors from the blend palette at random."))
   const mirrorEffect = effectToggle("mirror", "\ue815", "Toggle mirror mode (WIP)")
-  mirrorEffect.disabled = true
+  mirrorEffect.firstChild.disabled = true
   effects.append(mirrorEffect)
   panel.append(effects)
 }
@@ -168,8 +167,9 @@ function shadeConfig() {
     configToggle("Shade Steps", "shade-steps", stepSizes, (value, radio, radioLabel) => {
       radio.setAttribute('title', `Set shade steps to ${value[1]}.`)
       radio.setAttribute('data-step', value[1])
+      radioLabel.classList.add('font-extrabold')
       radio.addEventListener('click', event => {
-        NCRSEditorSettings.shadeStep = Number(event.target.dataset.step)
+        NCRSEditorSettings.shadeStep = Number(event.target.dataset.step);
       })
     })
   )

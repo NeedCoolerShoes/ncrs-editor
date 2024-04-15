@@ -25,7 +25,7 @@ html {
     @apply text-ncs-yellow-200;
   }
 
-  .btn-ncs:active, .btn-ncs:checked, .btn-ncs:checked + .btn-ncs, .btn-ncs-active {
+  .btn-ncs:active, .btn-ncs:checked, .btn-ncs:checked + .btn-ncs-label, .btn-ncs-active {
     @apply text-ncs-light-gray-200
     bg-gradient-to-b bg-ncs-gray-300
     mb-1 mt-0.5;
@@ -34,13 +34,13 @@ html {
     0 2px #1f2326, 0 1px 1px rgba(0, 0, 0, 0.2);
   }
 
-  .btn-ncs:disabled, .btn-ncs-disabled {
+  .btn-ncs:disabled, .btn-ncs:disabled + .btn-ncs-label, .btn-ncs-disabled {
     @apply text-ncs-light-gray-200 hover:text-ncs-light-gray-200 cursor-not-allowed bg-ncs-gray-300;
     @apply active:bg-gradient-to-t;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px #262a2e,
     0 3px #1f2326, 0 4px 3px rgba(0, 0, 0, 0.2);
   }
-  .btn-ncs:disabled:active, .btn-ncs-disabled:active {
+  .btn-ncs:disabled:active, .btn-ncs:disabled + .btn-ncs-label, .btn-ncs-disabled:active {
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px #262a2e,
     0 3px #1f2326, 0 4px 3px rgba(0, 0, 0, 0.2);
     @apply mb-1.5 mt-0;
