@@ -1,12 +1,13 @@
 import {NCRSEditor} from "../editor.js";
 import {Sortable} from '@shopify/draggable';
 
-NCRSEditor.addEventListener('layer-add', event => {
-  layerList.addLayer(event.detail.newLayer)
-})
 
 const layerList = document.createElement('ncrs-layer-list')
 document.getElementById('layers').append(layerList)
+
+NCRSEditor.addEventListener('layer-add', event => {
+  layerList.addLayer(event.detail.newLayer)
+})
 
 const layerButtons = document.getElementById('layer-buttons')
 

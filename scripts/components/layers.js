@@ -13,26 +13,27 @@ class NCRSLayerList extends HTMLElement {
 
   addLayer(skinLayer) {
     const layer = document.createElement('ncrs-layer');
+    layer.setAttribute('selected', true);
     layer.skinLayer = skinLayer;
     this.layers.push(layer);    
 
     layer.addEventListener('ncrs-select', event => {
       this.layers.forEach(layer => {
+        if (layer == event.target) { return; }
         layer.deselect();
       })
       this.selectedLayer = event.target;
     })
 
     this.appendChild(layer);
-    layer.select();
   }
 
   removeCurrentLayer() {
     if (!this.selectedLayer) { return; };
     const newSelected = this.selectedLayer.previousElementSibling || this.selectedLayer.nextElementSibling;
-    this.selectedLayer.removeLayer()
-    this.selectedLayer = newSelected;
-    if (this.selectedLayer) {
+    this.selectedLayer.removeLayer();
+    if (newSelected) {
+      this.selectedLayer = newSelected;
       this.selectedLayer.select();
     }
   }
@@ -53,10 +54,10 @@ class NCRSLayer extends HTMLElement {
 
   select() {
     if (this.skinLayer) { this.skinLayer.select() }
-    this.dispatchEvent(this.selectEvent);
     this.classList.remove('border-ncs-gray-700');
     this.classList.add('border-gray-600');
     this.setAttribute('selected', true);
+    this.dispatchEvent(this.selectEvent);
   }
 
   deselect() {

@@ -40,7 +40,7 @@ function configToggle(title, name, data, callback) {
 
 function sizeInput(name, sizes) {
   const sizeInput = configToggle("Size", name, sizes, (value, radio, radioLabel) => {
-    radio.setAttribute('title', `Set brush size of ${value[1]}.`)
+    radioLabel.setAttribute('title', `Set brush size of ${value[1]}.`)
     radio.setAttribute('data-size', value[1])
     radio.addEventListener('click', event => {
       NCRSEditorSettings.setBrushSize(Number(event.target.dataset.size))
@@ -54,6 +54,24 @@ function sizeInput(name, sizes) {
     })
   })
   return sizeInput;
+}
+
+function shapeInput(name, shapes) {
+  const shapeInput = configToggle("Shape", name, shapes, (value, radio, radioLabel) => {
+    radioLabel.setAttribute('title', `Set brush shape of ${value[1]}.`)
+    radio.setAttribute('data-shape', value[1])
+    radio.addEventListener('click', event => {
+      NCRSEditorSettings.setBrushStyle(event.target.dataset.shape)
+    })
+    NCRSEditorSettings.addEventListener("brushStyle", event => {
+      if (value[1] == event.detail.style) {
+        radio.checked = true
+      } else {
+        radio.checked = false
+      }
+    })
+  })
+  return shapeInput;
 }
 
 function effectField(title = "Effects") {
@@ -119,8 +137,16 @@ function brushConfig() {
     ["\ue824", 2],
     ["\ue813", 3]
   ]
+  const brushShapes = [
+    ["\ue80e", "square"],
+    ["\uf111", "circle"]
+  ]
 
-  panel.append(sizeInput("brush-size", brushSizes))
+  const styleDiv = document.createElement('div')
+  styleDiv.classList.add('flex', 'gap-2')
+  styleDiv.append(sizeInput("brush-size", brushSizes))
+  styleDiv.append(shapeInput("brush-shape", brushShapes))
+  panel.append(styleDiv)
 
   const effects = effectField()
 

@@ -1,5 +1,6 @@
 import {CopperOre} from "./vendor/copper_ore/src/copper_ore.js"
 import {clamp, hexToRGB, sample, getRandomInt, shadeColor} from "./helpers.js"
+import { texture } from "three/examples/jsm/nodes/Nodes.js";
 
 class NCRSEditorSettingsClass extends EventTarget {
   currentColor = {r: 255, b: 0, g: 0, a: 255};
@@ -12,6 +13,7 @@ class NCRSEditorSettingsClass extends EventTarget {
     shadeOnce: false
   };
   brushSize = 1;
+  brushStyle = "square";
   shadeStep = 1;
 
   toggleEffect(effect) {
@@ -22,6 +24,11 @@ class NCRSEditorSettingsClass extends EventTarget {
   setBrushSize(size) {
     this.brushSize = size;
     this.dispatchEvent(new CustomEvent("brushSize", {detail: {size: size}}));
+  }
+
+  setBrushStyle(style) {
+    this.brushStyle = style;
+    this.dispatchEvent(new CustomEvent("brushStyle", {detail: {style: style}}));
   }
 }
 
@@ -53,22 +60,60 @@ function ApplyBrush(intermediateTexture, point, color){
     const offsetX = row - center;
     const offsetY = col - center;
 
-    const pointX = clamp(point.x + offsetX, 0, NCRSEditor.IMAGE_WIDTH)
-    const pointY = clamp(point.y + offsetY, 0, NCRSEditor.IMAGE_HEIGHT)
+    const pointX = clamp(point.x + offsetX, 0, NCRSEditor.IMAGE_WIDTH);
+    const pointY = clamp(point.y + offsetY, 0, NCRSEditor.IMAGE_HEIGHT);
 
-    let useColor;
-    if (typeof color === "function") {
-      let newColor = color(intermediateTexture, {x: pointX, y: pointY});
-      if (!newColor) { return }
-      useColor = [newColor.r, newColor.g, newColor.b, newColor.a]
-    } else {
-      useColor = color;
-    }
+    const newColor = TransformColor(intermediateTexture, {x: pointX, y: pointY}, color);
+    if (!newColor) { return }
 
-    if (!color) { return }
-
-    intermediateTexture.ChangePixelAtArray({x: pointX, y: pointY}, useColor);
+    intermediateTexture.ChangePixelAtArray({x: pointX, y: pointY}, newColor);
   }
+}
+
+function ApplyCircleBrush(intermediateTexture, point, color) {
+  let r = Math.floor(NCRSEditorSettings.brushSize + 1 / 2);
+  DrawFilledCircle(intermediateTexture, point.x, point.y, r, color);
+}
+
+function TransformColor(intermediateTexture, point, color) {
+  if (typeof color === "function") {
+    const newColor = color(intermediateTexture, {x: point.x, y: point.y});
+    if (!newColor) { return false }
+    return [newColor.r, newColor.g, newColor.b, newColor.a]
+  } else {
+    return color;
+  }
+}
+
+// https://stackoverflow.com/questions/1201200/fast-algorithm-for-drawing-filled-circles
+// https://zingl.github.io/bresenham.html
+function DrawFilledCircle(texture, x0, y0, radius, color) {
+  let r = radius;
+  let x = -radius;
+  let y = 0;
+  let err = 2 - 2 * r;
+
+  do {
+      for (let i = x0 - x; i <= x0 + x; i++)
+      {
+          SetPixel(texture, i, y0 + y, color);
+          SetPixel(texture, i, y0 - y, color);
+      }
+      for (let i = x0 - y; i <= x0 + y; i++)
+      {
+          SetPixel(texture, i, y0 + x, color);
+          SetPixel(texture, i, y0 - x, color);
+      }
+
+    r = err;
+    if (r <= y) err += ++y * 2 + 1;
+    if (r > x || err > y) err += ++x * 2 + 1;
+  } while (x < 1)
+}
+
+function SetPixel(texture, x, y, color) {
+  const newColor = TransformColor(texture, {x: x, y: y}, color);
+  texture.ChangePixelAtArray({x: x, y: y}, newColor);
 }
 
 function FillColor(intermediateTexture, point, newColor){
@@ -79,7 +124,11 @@ function FillColor(intermediateTexture, point, newColor){
 }
 
 function UseBrush(part, canvasTexture, pixel) {
-  ApplyBrush(canvasTexture, pixel, getColor);
+  if (NCRSEditorSettings.brushStyle == "circle") {
+    ApplyCircleBrush(canvasTexture, pixel, getColor);
+  } else {
+    ApplyBrush(canvasTexture, pixel, getColor);
+  }
 }
 
 function UseBucket(part, canvasTexture, pixel) {

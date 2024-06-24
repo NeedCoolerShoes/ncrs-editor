@@ -4,5 +4,8 @@ import './components/tabs.js'
 import './components/tools.js'
 
 import "./color_picker.js"
-import "./editor.js"
+import {NCRSEditor, NCRSEditorSettings} from "./editor.js"
 import "./ui.js"
+
+window.NCRSEditor = NCRSEditor;
+window.NCRSEditorSettings = NCRSEditorSettings;

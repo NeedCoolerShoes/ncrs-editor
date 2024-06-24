@@ -60,4 +60,4 @@ function shadeColor(R, G, B, percent) {
   return {r: R, g: G, b: B}
 }
 
-export {RGBToHex, hexToRGB, clamp, sample, getRandomInt, shadeColor};
+export {RGBToHex, hexToRGB, clamp, sample, getRandomInt, shadeColor, pointInCircle, distFromCircle};
