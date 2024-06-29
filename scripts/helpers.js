@@ -60,4 +60,12 @@ function shadeColor(R, G, B, percent) {
   return {r: R, g: G, b: B}
 }
 
-export {RGBToHex, hexToRGB, clamp, sample, getRandomInt, shadeColor};
+function download(filename, url) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  link.remove();
+}
+
+export {RGBToHex, hexToRGB, clamp, sample, getRandomInt, shadeColor, download};

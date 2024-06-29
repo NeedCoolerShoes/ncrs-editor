@@ -53,7 +53,7 @@ class NCRSLayer extends HTMLElement {
   }
 
   select() {
-    if (this.skinLayer) { this.skinLayer.select() }
+    if (this.skinLayer) { this.skinLayer.select(); }
     this.classList.remove('border-ncs-gray-700');
     this.classList.add('border-gray-600');
     this.setAttribute('selected', true);
@@ -61,6 +61,7 @@ class NCRSLayer extends HTMLElement {
   }
 
   deselect() {
+    if (this.skinLayer) { this.skinLayer.deselect(); }
     this.classList.remove('border-gray-600');
     this.classList.add('border-ncs-gray-700');
     this.setAttribute('selected', '');

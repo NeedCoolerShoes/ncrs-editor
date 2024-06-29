@@ -1,7 +1,5 @@
 import {CopperOre} from "./vendor/copper_ore/src/copper_ore.js"
-import {clamp, hexToRGB, sample, getRandomInt, shadeColor} from "./helpers.js"
-import { texture } from "three/examples/jsm/nodes/Nodes.js";
-
+import {clamp, hexToRGB, sample, getRandomInt, shadeColor, download} from "./helpers.js"
 class NCRSEditorSettingsClass extends EventTarget {
   currentColor = {r: 255, b: 0, g: 0, a: 255};
   blendPalette = [];
@@ -177,7 +175,18 @@ function getColor() {
   return color;
 }
 
+function exportToNCRS() {
+  const data = JSON.stringify(
+    {
+      version: -1, model: "classic", blendPalette: NCRSEditorSettings.blendPalette,
+      data: NCRSEditor.layers.map(layer => { return layer.serialize() })
+    }
+  )
+
+  download("download.ncrs", `data:text/json;,${data}`);
+}
+
 NCRSEditor.camera.zoom = 1.6;
 NCRSEditor.settings.grid = true;
 
-export {NCRSEditor, NCRSEditorSettings};
+export {NCRSEditor, NCRSEditorSettings, exportToNCRS};

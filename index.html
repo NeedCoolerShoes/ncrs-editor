@@ -17,7 +17,6 @@
         <ncrs-tool-list id="toolbox-buttons" class="flex flex-col gap-1 text-2xl">
           <ncrs-tool id="preview-tool" title="Switch to preview mode." class="hidden touch:block btn-ncs font-icon select-none w-12" tool="preview" config="#preview-config"></ncrs-tool>
           <ncrs-tool title="Switch to brush." class="btn-ncs font-icon select-none w-12" selected="true" tool="brush" config="#brush-config"></ncrs-tool>
-          <ncrs-tool title="Switch to square." class="btn-ncs font-icon select-none w-12" tool="square" config="#square-config"></ncrs-tool>
           <ncrs-tool title="Switch to bucket." class="btn-ncs font-icon select-none w-12" tool="bucket" config="#bucket-config"></ncrs-tool>
           <ncrs-tool title="Switch to shade tool." class="btn-ncs font-icon select-none w-12" tool="shade" config="#shade-config"></ncrs-tool>
         </ncrs-tool-list>
@@ -48,9 +47,6 @@
             <ncrs-tool-config id="brush-config" class="hidden flex-col">
               <h2 class="self-center text-sm text-gray-400">Brush Tool</h2>
             </ncrs-tool-config>
-            <ncrs-tool-config id="square-config" class="hidden flex-col">
-              <h2 class="self-center text-sm text-gray-400">Square Tool</h2>
-            </ncrs-tool-config>
             <ncrs-tool-config id="bucket-config" class="hidden flex-col">
               <h2 class="self-center text-sm text-gray-400">Fill Tool</h2>
             </ncrs-tool-config>
@@ -64,7 +60,17 @@
           Import Skins
         </ncrs-tab-panel>
         <ncrs-tab-panel id="export-tab" class="hidden flex-col grow p-2">
-          Export Skin
+          <fieldset class="flex flex-col border-2 border-ncs-gray-400 bg-ncs-gray-800 rounded-sm p-2">
+            <legend class="font-bold text-center text-xl">Export</legend>
+            <button class="btn-ncs font-extrabold w-full" onclick="NCRSEditor.Download()">Download as Skin (.png)</button>
+            <button class="btn-ncs font-extrabold w-full" onclick="exportToNCRS()">Export Layers (.ncrs)</button>
+          </fieldset>
+          <fieldset class="flex flex-col border-2 border-ncs-gray-400 bg-ncs-gray-800 rounded-sm p-2">
+            <legend class="font-bold text-center text-xl">Share</legend>
+            <button class="btn-ncs font-extrabold w-full">Share to Gallery</button>
+            <button class="btn-ncs font-extrabold w-full">Upload to Minecraft</button>
+            <button class="btn-ncs font-extrabold w-full">Get Shareable Link</button>
+          </fieldset>
         </ncrs-tab-panel>
         <ncrs-tab-list class="flex gap-1 bg-ncs-gray-900 text-center pb-1">
           <ncrs-tab selected="true" panel="#tool-tab" class="tab-t-ncs">Tool</ncrs-tab>

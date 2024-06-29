@@ -78,6 +78,27 @@ html {
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Lato";
+  src: url("../fonts/Lato-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("../fonts/RobotoSlab-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("../fonts/RobotoSlab-ExtraBold.ttf");
+  font-weight: 800;
+  font-style: normal;
+}
+
 ncrs-layer-list:focus {
   outline: none;
 }

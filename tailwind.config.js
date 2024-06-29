@@ -8,6 +8,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        sans: ['Lato', 'sans-serif'],
+        serif: ['Roboto Slab', 'serif'],
         icon: ['icon', 'sans-serif'],
       },
       colors: {

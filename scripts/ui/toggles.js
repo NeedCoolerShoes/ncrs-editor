@@ -49,3 +49,5 @@ const gridToggle = checkboxToggle("\ue82c", "grid-toggle", "Toggle grid.", (even
 toggles.append(armorToggle)
 toggles.append(skinToggle)
 toggles.append(gridToggle)
+
+armorToggle.click();

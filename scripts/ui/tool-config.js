@@ -16,7 +16,7 @@ function configToggle(title, name, data, callback) {
     const radio = document.createElement('input')
     const radioLabel = document.createElement('label')
     radio.type = 'radio'
-    radio.id = `${name}-${count}}`
+    radio.id = `${name}-${count}`
     radio.classList.add('hidden', 'btn-ncs')
     radio.setAttribute('name', name)
     radioLabel.htmlFor = radio.id
@@ -38,40 +38,20 @@ function configToggle(title, name, data, callback) {
   return configField;
 }
 
-function sizeInput(name, sizes) {
-  const sizeInput = configToggle("Size", name, sizes, (value, radio, radioLabel) => {
-    radioLabel.setAttribute('title', `Set brush size of ${value[1]}.`)
-    radio.setAttribute('data-size', value[1])
-    radio.addEventListener('click', event => {
-      NCRSEditorSettings.setBrushSize(Number(event.target.dataset.size))
-    })
-    NCRSEditorSettings.addEventListener("brushSize", event => {
-      if (value[1] == event.detail.size) {
+function eventConfigToggle(name, elements, attr, eventName, title, tooltip, onClick) {
+  const input = configToggle(title, name, elements, (value, radio, radioLabel) => {
+    radioLabel.setAttribute('title', `${tooltip} ${value[1]}.`)
+    radio.setAttribute(`data-${attr}`, value[1])
+    radio.addEventListener('click', onClick)
+    NCRSEditorSettings.addEventListener(eventName, event => {
+      if (value[1] == event.detail[attr]) {
         radio.checked = true
       } else {
         radio.checked = false
       }
     })
   })
-  return sizeInput;
-}
-
-function shapeInput(name, shapes) {
-  const shapeInput = configToggle("Shape", name, shapes, (value, radio, radioLabel) => {
-    radioLabel.setAttribute('title', `Set brush shape of ${value[1]}.`)
-    radio.setAttribute('data-shape', value[1])
-    radio.addEventListener('click', event => {
-      NCRSEditorSettings.setBrushStyle(event.target.dataset.shape)
-    })
-    NCRSEditorSettings.addEventListener("brushStyle", event => {
-      if (value[1] == event.detail.style) {
-        radio.checked = true
-      } else {
-        radio.checked = false
-      }
-    })
-  })
-  return shapeInput;
+  return input;
 }
 
 function effectField(title = "Effects") {
@@ -144,8 +124,18 @@ function brushConfig() {
 
   const styleDiv = document.createElement('div')
   styleDiv.classList.add('flex', 'gap-2')
-  styleDiv.append(sizeInput("brush-size", brushSizes))
-  styleDiv.append(shapeInput("brush-shape", brushShapes))
+  const sizeInput = eventConfigToggle(
+    "brush-size", brushSizes, "size",
+    "brushSize", "Size", "Set brush size of",
+    event => { NCRSEditorSettings.setBrushSize(Number(event.target.dataset.size)) }
+  )
+  styleDiv.append(sizeInput)
+  const shapeInput = eventConfigToggle(
+    "brush-shape", brushShapes, "style",
+    "brushStyle", "Shape", "Set brush shape to",
+    event => { NCRSEditorSettings.setBrushStyle(event.target.dataset.style) }
+  )
+  styleDiv.append(shapeInput)
   panel.append(styleDiv)
 
   const effects = effectField()
@@ -188,7 +178,13 @@ function shadeConfig() {
   effects.append(effectToggle("darken", "\ue827", "Darken mode."))
   effects.append(effectToggle("shadeOnce", "\ue812", "Only shade a pixel once in a given stroke."))
 
-  subPanel.append(sizeInput("shade-size", brushSizes))
+  const sizeInput = eventConfigToggle(
+    "shade-size", brushSizes, "size",
+    "brushSize", "Size", "Set brush size of",
+    event => { NCRSEditorSettings.setBrushSize(Number(event.target.dataset.size)) }
+  )
+
+  subPanel.append(sizeInput)
   subPanel.append(
     configToggle("Shade Steps", "shade-steps", stepSizes, (value, radio, radioLabel) => {
       radio.setAttribute('title', `Set shade steps to ${value[1]}.`)
