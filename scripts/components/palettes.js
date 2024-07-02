@@ -56,24 +56,42 @@ class NCRSBlendPalette extends HTMLElement {
     super();
   }
 
+  #colors = [];
+
   connectedCallback() {
-    window.addEventListener('load', () => {
-      const addButton = document.createElement('ncrs-palette-color');
-      addButton.innerText = '+';
-      addButton.setColor('#2e2e2e')
-      addButton.setAttribute('title', 'Add current color to blend palette.');
-      addButton.classList.add('select-none', 'text-center')
-      addButton.addEventListener('click', () => {
-        const currentColor = NCRSEditorSettings.currentColor;
-        this.addColor(RGBToHex(currentColor.r, currentColor.g, currentColor.b));
-      })
-      this.append(addButton);
+    window.addEventListener('load', () => { this.addPlusButton() })
+
+    NCRSEditorSettings.addEventListener('updateBlendPalette', event => { this.update(event.detail.palette) });
+  }
+  
+  update(palette) {
+    this.#colors.forEach(color => { color.remove(); })
+    this.#colors = [];
+
+    palette.forEach(color => { this.#addColor(color) });
+  }
+
+  addPlusButton() {
+    const addButton = document.createElement('ncrs-palette-color');
+    addButton.innerText = '+';
+    addButton.setColor('#2e2e2e')
+    addButton.setAttribute('title', 'Add current color to blend palette.');
+    addButton.classList.add('select-none', 'text-center', 'leading-none')
+    addButton.addEventListener('click', () => {
+      const currentColor = NCRSEditorSettings.currentColor;
+      this.addColor(RGBToHex(currentColor.r, currentColor.g, currentColor.b));
     })
+    this.append(addButton);
   }
 
   addColor(color) {
     if (NCRSEditorSettings.blendPalette.includes(color)) { return; }
     NCRSEditorSettings.blendPalette.push(color);
+    this.#addColor(color);
+    NCRSEditorSettings.saveToLocalStorage();
+  }
+
+  #addColor(color) {
     const newColor = document.createElement('ncrs-palette-color');
     newColor.setColor(color);
     newColor.setAttribute('title', 'Remove color from blend palette.');
@@ -82,6 +100,7 @@ class NCRSBlendPalette extends HTMLElement {
     newColor.addEventListener('click', event => {
       this.removeColor(event.target.getAttribute('color'));
     })
+    this.#colors.push(newColor);
   }
 
   removeColor(color) {
@@ -89,6 +108,7 @@ class NCRSBlendPalette extends HTMLElement {
     if (index < 0) { return; }
     NCRSEditorSettings.blendPalette.splice(index, 1)
     this.querySelector(`[color="${color}"]`).remove()
+    NCRSEditorSettings.saveToLocalStorage();
   }
 }
 

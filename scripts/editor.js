@@ -1,5 +1,6 @@
 import {CopperOre} from "./vendor/copper_ore/src/copper_ore.js"
 import {clamp, hexToRGB, sample, getRandomInt, shadeColor, download} from "./helpers.js"
+import { SkinLayer } from "./vendor/copper_ore/src/skin_layer.js";
 class NCRSEditorSettingsClass extends EventTarget {
   currentColor = {r: 255, b: 0, g: 0, a: 255};
   blendPalette = [];
@@ -28,12 +29,59 @@ class NCRSEditorSettingsClass extends EventTarget {
     this.brushStyle = style;
     this.dispatchEvent(new CustomEvent("brushStyle", {detail: {style: style}}));
   }
+
+  setBlendPalette(palette) {
+    this.blendPalette = palette;
+    this.dispatchEvent(new CustomEvent("updateBlendPalette", {detail: {palette: this.blendPalette}}));
+  }
+
+  getSaveData(editor) {
+    return JSON.stringify(
+      {
+        version: -1, model: "classic", blendPalette: this.blendPalette,
+        data: editor.layers.map(layer => { return layer.serialize() })
+      }
+    )
+  }
+
+  selectLayer(id) {
+    this.dispatchEvent(new CustomEvent("selectLayer", {detail: {layerId: id}}));
+  }
+
+  saveToLocalStorage() {
+    localStorage.setItem('ncrs-save', NCRSEditorSettings.getSaveData(NCRSEditor))
+  }
+
+  loadFromData(load) {
+    if (!load) { return; }
+    if (load.blendPalette) { this.setBlendPalette(load.blendPalette) };
+    if (load.data.length > 0) {
+      NCRSEditor.RemoveAllLayers();
+      let selected = 0;
+      load.data.map(layer => {
+        const canvas = this.createCanvasFromStringData(atob(layer.data));
+        NCRSEditor.AddLayer({image: canvas}, true)
+        if (layer.current) { selected = SkinLayer.lastLayerId; }
+      });
+
+      this.selectLayer(selected);
+    }
+  }
+
+  createCanvasFromStringData(string) {
+    const array = Uint8ClampedArray.from([...string].map(ch => ch.charCodeAt()));
+    const imgData = new ImageData(array, NCRSEditor.IMAGE_WIDTH, NCRSEditor.IMAGE_HEIGHT);
+    const canvas = new OffscreenCanvas(NCRSEditor.IMAGE_WIDTH, NCRSEditor.IMAGE_HEIGHT);
+    const ctx = canvas.getContext('2d');
+    ctx.putImageData(imgData, 0, 0);
+
+    return canvas;
+  }
 }
 
 const NCRSEditorSettings = new NCRSEditorSettingsClass;
 
 const NCRSEditor = new CopperOre({
-  texture: '/mncs-mascot.png',
   bind: this,
   parent: document.getElementById("editor"),
   tools: {
@@ -176,17 +224,19 @@ function getColor() {
 }
 
 function exportToNCRS() {
-  const data = JSON.stringify(
-    {
-      version: -1, model: "classic", blendPalette: NCRSEditorSettings.blendPalette,
-      data: NCRSEditor.layers.map(layer => { return layer.serialize() })
-    }
-  )
-
-  download("download.ncrs", `data:text/json;,${data}`);
+  download("download.ncrs", `data:text/json;,${NCRSEditorSettings.getSaveData(NCRSEditor)}`);
 }
 
 NCRSEditor.camera.zoom = 1.6;
 NCRSEditor.settings.grid = true;
+
+NCRSEditor.addEventListener('after-input', () => {
+  NCRSEditorSettings.saveToLocalStorage();
+})
+
+window.addEventListener("load", () => {
+  const data = JSON.parse(localStorage.getItem('ncrs-save'));
+  NCRSEditorSettings.loadFromData(data);
+})
 
 export {NCRSEditor, NCRSEditorSettings, exportToNCRS};

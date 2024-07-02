@@ -9,6 +9,14 @@ NCRSEditor.addEventListener('layer-add', event => {
   layerList.addLayer(event.detail.newLayer)
 })
 
+NCRSEditor.addEventListener('layer-remove', event => {
+  layerList.deleteLayer(event.detail.layerId)
+})
+
+NCRSEditor.addEventListener('layer-reorder', event => {
+  layerList.reorderLayer(event.detail.from, event.detail.to)
+})
+
 const layerButtons = document.getElementById('layer-buttons')
 
 const addLayerButton = document.createElement('button')
